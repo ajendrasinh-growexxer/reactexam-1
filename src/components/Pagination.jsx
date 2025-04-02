@@ -1,7 +1,7 @@
 import React from "react";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  // Ensure currentPage and totalPages are valid numbers
+  
   const current = Math.max(
     1,
     Math.min(parseInt(currentPage) || 1, parseInt(totalPages) || 1)
@@ -20,7 +20,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     const maxVisiblePages = 5;
 
     if (total <= maxVisiblePages) {
-      // Show all pages if total is less than maxVisiblePages
+     
       for (let i = 1; i <= total; i++) {
         pages.push(
           <button
@@ -38,7 +38,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         );
       }
     } else {
-      // Always show first page
+     
       pages.push(
         <button
           key={1}
@@ -54,7 +54,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         </button>
       );
 
-      // Show ellipsis and pages around current page
+      
       let startPage = Math.max(2, current - 1);
       let endPage = Math.min(total - 1, current + 1);
 
@@ -91,7 +91,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         );
       }
 
-      // Always show last page
+     
       pages.push(
         <button
           key={total}
