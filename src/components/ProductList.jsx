@@ -15,7 +15,7 @@ const ProductList = () => {
   const [loadingTimeout, setLoadingTimeout] = useState(false);
   const [manuallyFetchedProducts, setManuallyFetchedProducts] = useState(null);
 
-  // Query products
+ 
   const { data, isLoading, error, refetch } = useGetProductsQuery(
     {
       page: currentPage,
@@ -26,22 +26,21 @@ const ProductList = () => {
     }
   );
 
-  // Set a timeout to prevent endless loading
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoadingTimeout(true);
-      // If loading takes too long, try a direct fetch
+     
       tryDirectFetch();
     }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Try a direct fetch as fallback
+
   const tryDirectFetch = async () => {
     try {
-      console.log("Trying direct fetch to API");
-      // Calculate pagination indices
+      
       const start = (currentPage - 1) * itemsPerPage;
       const end = start + itemsPerPage;
 
@@ -61,11 +60,11 @@ const ProductList = () => {
           currentPage
         );
 
-        // Get all products to calculate total
+       
         const allProductsResponse = await fetch(
           "http://localhost:3004/products"
         );
-        let totalCount = products.length * 2; // Default fallback
+        let totalCount = products.length * 2; 
 
         if (allProductsResponse.ok) {
           const allProducts = await allProductsResponse.json();
@@ -81,7 +80,7 @@ const ProductList = () => {
           totalCount,
         });
 
-        // If successful, update the Redux store
+       
         if (products.length > 0) {
           dispatch(setTotalPages(totalPages));
         }
@@ -91,14 +90,14 @@ const ProductList = () => {
     }
   };
 
-  // Handle page changes
+ 
   const handlePageChange = (page) => {
     console.log("Page change requested:", page);
     if (page !== currentPage) {
       setIsChangingPage(true);
       dispatch(setCurrentPage(page));
 
-      // Directly fetch new page data
+     
       setTimeout(() => {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
@@ -113,9 +112,8 @@ const ProductList = () => {
             );
             setManuallyFetchedProducts({
               products,
-              totalPages: Math.max(2, Math.ceil(16 / itemsPerPage)), // Assuming 16+ total products
-              totalCount: 16, // Assuming at least 16 products
-            });
+              totalPages: Math.max(2, Math.ceil(16 / itemsPerPage)),
+              totalCount: 16,             });
             setIsChangingPage(false);
           })
           .catch((error) => {
@@ -126,7 +124,7 @@ const ProductList = () => {
     }
   };
 
-  // When page changes, update UI and fetch data
+ 
   useEffect(() => {
     if (data && data.totalPages) {
       dispatch(setTotalPages(data.totalPages));
@@ -139,10 +137,10 @@ const ProductList = () => {
     return () => clearTimeout(timeout);
   }, [data, currentPage, dispatch]);
 
-  // Show loading state with timeout fallback
+  
   if ((isLoading || isChangingPage) && !manuallyFetchedProducts) {
     if (loadingTimeout) {
-      // If loading takes too long, show a message with options
+    
       return (
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-8">
@@ -188,7 +186,7 @@ const ProductList = () => {
     );
   }
 
-  // Handle errors from RTK Query
+  
   if (error && !manuallyFetchedProducts) {
     return (
       <div className="text-center py-8">
@@ -220,12 +218,12 @@ const ProductList = () => {
     );
   }
 
-  // Use either RTK Query data or manually fetched data
+  
   const productData = manuallyFetchedProducts ||
     data || { products: [], totalPages: 2 };
   const { products = [], totalPages = 2 } = productData;
 
-  // Handle case when no products are found
+ 
   if (products.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
