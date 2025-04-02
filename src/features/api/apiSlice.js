@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { retry } from "@reduxjs/toolkit/query/react";
 
-// Create a base query with retry logic
+
 const baseQueryWithRetry = retry(
   fetchBaseQuery({
     baseUrl: "http://localhost:3004",
@@ -10,7 +10,7 @@ const baseQueryWithRetry = retry(
   { maxRetries: 3 }
 );
 
-// Calculate pagination indices
+
 const getStartAndEndIndices = (page, limit) => {
   const start = (page - 1) * limit;
   const end = page * limit - 1;
@@ -25,7 +25,7 @@ export const apiSlice = createApi({
     getProducts: builder.query({
       query: ({ page = 1, limit = 8 }) => {
         console.log("Fetching products for page:", page, "limit:", limit);
-        // For json-server v1.0.0-beta.3, use _start and _end instead of _page and _limit
+        
         const { start, end } = getStartAndEndIndices(page, limit);
         return `/products?_start=${start}&_end=${start + limit}`;
       },
@@ -39,7 +39,7 @@ export const apiSlice = createApi({
           response.length > 0 ? response[0].id : "none"
         );
 
-        // Get total count from all products
+        
         const getAllProducts = async () => {
           try {
             const response = await fetch("http://localhost:3004/products");
@@ -54,8 +54,8 @@ export const apiSlice = createApi({
           }
         };
 
-        // Handle missing headers (in case the server doesn't support them)
-        let totalCount = response ? response.length * 2 : 0; // Assume at least double for testing
+        
+        let totalCount = response ? response.length * 2 : 0; 
         try {
           const totalCountHeader =
             meta?.response?.headers?.get("X-Total-Count");
